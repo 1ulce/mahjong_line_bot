@@ -47,7 +47,8 @@ class HomeController < ApplicationController
             originalContentUrl: image_url,
             previewImageUrl: image_url
           }
-          line_client.push_message(ENV["LINE_IMAGE_GROUP"], message)
+          #line_client.push_message(ENV["LINE_IMAGE_GROUP"], message)
+          system("osascript line_paste.scpt")
           head :ok
         else
           p @body['event']['channel']
@@ -56,8 +57,9 @@ class HomeController < ApplicationController
             type: 'text',
             text: text
           }
-          line_client.push_message(ENV["LINE_MESSAGE_GROUP"], message)
-          system("osascript line_post.scpt '#{text}'")
+          #line_client.push_message(ENV["LINE_MESSAGE_GROUP"], message)
+          system("echo '#{text}' | pbcopy")
+          system("osascript line_paste.scpt")
           head :ok
         end
       end
@@ -67,12 +69,13 @@ class HomeController < ApplicationController
   private
 
   def fetch_and_save_image(file)
-    File.open("public/uploads/#{file['id']}", 'wb') do |f|
+    File.open("public/uploads/#{file['id']}.#{file['filetype']}", 'wb') do |f|
       res = RestClient.get(file['url_private'], { "Authorization" => "Bearer #{ENV['SLACK_TOKEN']}" })
       if res.code == 200
         f << res.body
       end
     end
+    system("osascript image_copy.scpt #{Rails.root}/public/uploads/#{file['id']}.#{file['filetype']}")
   end
 
   def get_display_name(userId)
