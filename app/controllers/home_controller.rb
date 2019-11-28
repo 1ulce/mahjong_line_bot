@@ -12,7 +12,7 @@ class HomeController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          text = event.message['text'].gsub("@"+ENV["LINE_NAME"],"<@"+ENV["SLACK_ID"]+">")
+          text = event.message['text'].gsub("@"+ENV["LINE_NAME"],"<@"+ENV["SLACK_YOUR_ID"]+">")
           message = {
             type: 'text',
             text: text
