@@ -17,12 +17,19 @@ class HomeController < ApplicationController
             type: 'text',
             text: text
           }
-          user_name, user_icon_url = get_display_name(event['source']['userId'])
-          #p user_name
-          slack_client.chat_postMessage(channel: "#"+ENV["SLACK_CHANNEL_NAME"], text: text, as_user: false, username: user_name, icon_url: user_icon_url) if text
+          user = LineUser.find_or_create_by(line_id: event['source']['userId'])
+          user_name = user.nick_name ? user.nick_name : user.id
+            #user_name, user_icon_url = get_display_name(event['source']['userId'])
+            #p user_name
+            #if user_name == '404 {\"message\":\"Not found\"}'
+
+          slack_client.chat_postMessage(channel: "#"+ENV["SLACK_CHANNEL_NAME"], text: text, as_user: false, username: user_name) if text
           
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
-          user_name, user_icon_url = get_display_name(event['source']['userId'])
+          #user_name, user_icon_url = get_display_name(event['source']['userId'])
+          user = LineUser.find_or_create_by(line_id: event['source']['userId'])
+          user_name = user.nick_name ? user.nick_name : user.id
+          
           text = "[system]#{user_name}がなんかの画像を投稿しました"
           message = {
             type: 'text',

@@ -25,6 +25,9 @@ ActiveRecord::Schema.define(version: 2019_11_28_015553) do
   end
 
   create_table "line_users", force: :cascade do |t|
+    t.string "nick_name"
+    t.string "line_id"
+    t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
