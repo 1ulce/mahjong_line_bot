@@ -15,15 +15,6 @@ ActiveRecord::Schema.define(version: 2019_11_28_015553) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "jobs", force: :cascade do |t|
-    t.integer "schedule"
-    t.bigint "user_id"
-    t.boolean "active", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_jobs_on_user_id"
-  end
-
   create_table "line_users", force: :cascade do |t|
     t.string "nick_name"
     t.string "line_id"
@@ -32,14 +23,4 @@ ActiveRecord::Schema.define(version: 2019_11_28_015553) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "line_token"
-    t.integer "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "bath_time"
-    t.integer "aya"
-  end
-
-  add_foreign_key "jobs", "users"
 end
